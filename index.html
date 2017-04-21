@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="utf-8">
+        <title>Experience API Viewer</title>
+        
+        <link rel="stylesheet" href="css/base.css">
+		<link rel="stylesheet" href="css/skeleton.css">
+		<link rel="stylesheet" href="css/layout.css">
+		<link rel="stylesheet" href="css/TinCanViewer.css">
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/smoothness/jquery-ui-1.8.17.custom.css">
+
+        <script type="text/javascript" src="scripts/jquery.min.js"></script>
+        <script type="text/javascript" src="scripts/jquery-ui-1.8.17.custom.min.js"></script>
+		<script type="text/javascript" src="scripts/config.js"></script>
+		<script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+		<script type="text/javascript" src="scripts/tabs.js"></script>
+		<script type="text/javascript" src="scripts/base64.js"></script>
+		<script type="text/javascript" src="scripts/xapiwrapper.min.js"></script>
+		<script type="text/javascript" src="scripts/XAPIViewer.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+            	ADL.XAPIWrapper.changeConfig(Config);
+                ADL.Viewer.pageInitialize();
+                ADL.Viewer.searchStatements();
+            });
+        </script>
+        
+    </head>
+    
+    
+    <body>
+
+	<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+		<button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<a class="navbar-brand" href="#">Experience API Statement Viewer</a>
+
+		<!--<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+					<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Settings</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Profile</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Help</a>
+				</li>
+			</ul>
+			<form class="form-inline mt-2 mt-md-0">
+				<input class="form-control mr-sm-2" type="text" placeholder="Search">
+				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+			</form>
+		</div>
+		-->
+	</nav>
+	<div class="container-fluid">
+		<div class="row">
+
+			<main class="col-sm-9 offset-sm-3 col-md-10 offset-md-1 pt-3">
+			<!-- <ul class="tabs"> -->
+			  <!-- Give href an ID value of corresponding "tabs-content" <li>'s -->
+			  <!-- <li><a class="active" href="#statements">Statements</a></li>
+			  <li><a href="#activities">Activities</a></li>
+			  <li><a href="#actors">Actors</a></li>
+			</ul> -->
+
+			<!-- Standard <ul> with class of "tabs-content" -->
+			<!-- <ul class="tabs-content"> -->
+			  <!-- Give ID that matches HREF of above anchors -->
+			  	<!-- <li class="active" id="statements"> -->
+
+					<br/><br/>
+
+						<table id="searchBoxTable" class="table-responsive">
+							<tr>
+								<td><label>Actor Email</label><input id="actorEmail" type="text" placeholder="Email Address"></td>
+								<td><label>Verb ID</label><input id="verb" type="text" placeholder="Verb"></td>
+								<td><label>Activity ID</label><input id="activityId" type="text" placeholder="Activity ID"></td>
+<!-- 								<td><label>Use Context Activities</label><input id="context" type="checkbox"></input></td>
+ -->								
+							</tr>
+						</table>
+						<table id="advancedSearchTable" class="table-responsive">
+
+
+
+							<tr>
+								<td><label>Since</label><input id="since" type="text" placeholder="YYYY-MM-ddTHH:mm:ss.SSSZ"></input></td>
+								<td><label>Until</label><input id="until" type="text" placeholder="YYYY-MM-ddTHH:mm:ss.SSSZ"></input></td>
+								<td><label>Registration</label><input id="registration" type="text" placeholder="Registration ID"></input></td>
+<!-- 								<td><label>Authoritative Only</label><input id="authoritative" type="checkbox"></input></td>
+ -->							</tr>
+							<tr>
+								<td><label>Actor JSON</label><input id="actorJson" type="text" placeholder="Actor JSON"></input></td>
+<!-- 								<td><label>Object JSON</label><input id="objectJson" type="text" placeholder="Object JSON"></input></td>
+								<td><label>Instructor JSON</label><input id="instructorJson" type="text" placeholder="Instructor JSON"></input></td>
+								<td><label>Sparse</label><input id="sparse" type="checkbox"></input></td>
+ -->							</tr>
+						</table>
+						
+						<div id="XAPIQuery" style="display:none"><label>XAPI Query</label><textarea readonly="true" id="XAPIQueryText"></textarea></div>
+						
+						<button id='refreshStatements'>Refresh</button>
+						<button id="showAdvancedOptions">Show Advanced Options</button>
+						<button id="showQuery">Show XAPI Query</button>
+
+
+
+					<h2>Statements</h2>
+				<h4>Click on a statement to see the raw statement data.</h4>
+
+					<div class="table-responsive" id='theStatements'>
+
+					</div>
+                    <div id='statementsLoading'>
+                        <img src="img/loading.gif">
+                    </div>
+					<button id='showAllStatements'>More...</button>
+					
+					
+				<!-- </li>
+			  
+				<li id="activities">
+					<div class="heading">Activities</div>
+					<div id='activityData' ></div>
+					<button id='refreshActivityData'>Refresh</button>
+				</li>
+			  	
+				<li id="actors">
+					<div class="heading">Actors</div>
+					<div id='actorData' ></div>
+					<button id='refreshHighScores'>Refresh</button>
+			  	</li>
+			
+			  	<li id='lrsUtils'>
+					Here you have the ability to clear out your Learning Record Store.  Please do so with caution.  
+					This will clear all of your stored LRS data.
+					
+					<br/><br/>
+					<button id='deleteAllData'>Delete LRS Data</button>
+				</li>
+			
+			</ul> -->
+			
+</main>
+</div>
+		</div>
+    </body>
+</html>
